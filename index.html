@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mosaic Faces Art</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="mosaicCanvas" width="500" height="500"></canvas>
+
+<script>
+    const canvas = document.getElementById('mosaicCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const gridSize = 10;
+    const blockSize = canvas.width / gridSize;
+    const colors = ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1', '#F4E04D', '#FFB6C1', '#034F84'];
+    
+    // Randomly draw face parts like eyes, lips, nose within blocks
+    function drawRandomFacePart(x, y, size) {
+        ctx.beginPath();
+        const partType = Math.floor(Math.random() * 3);
+
+        switch (partType) {
+            case 0: // Draw an eye
+                drawEye(x + size / 4, y + size / 4, size / 4);
+                break;
+            case 1: // Draw a mouth
+                drawMouth(x + size / 4, y + size / 2, size / 2);
+                break;
+            case 2: // Draw a nose
+                drawNose(x + size / 2, y + size / 3, size / 3);
+                break;
+        }
+
+        ctx.closePath();
+    }
+
+    // Function to draw an eye
+    function drawEye(x, y, radius) {
+        ctx.fillStyle = '#fff';
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Pupil
+        ctx.beginPath();
+        ctx.fillStyle = '#000';
+        ctx.arc(x, y, radius / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    // Function to draw a mouth
+    function drawMouth(x, y, width) {
+        ctx.fillStyle = '#000';
+        ctx.arc(x, y, width / 2, 0, Math.PI, false);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Function to draw a nose
+    function drawNose(x, y, height) {
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - height / 2, y + height);
+        ctx.lineTo(x + height / 2, y + height);
+        ctx.fillStyle = '#000';
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    // Loop to create the mosaic blocks and draw face parts in random positions
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            const x = i * blockSize;
+            const y = j * blockSize;
+
+            // Set random background color for each block
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            ctx.fillStyle = randomColor;
+            ctx.fillRect(x, y, blockSize, blockSize);
+
+            // Draw a random face part in 30% of blocks
+            if (Math.random() > 0.7) {
+                drawRandomFacePart(x, y, blockSize);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
